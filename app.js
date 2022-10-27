@@ -12,7 +12,6 @@ const contactContent = "Scelerisque eleifend donec pretium vulputate sapien. Rho
 
 const app = express();
 
-
 app.set('view engine', 'ejs');
 
 app.use(bodyParser.urlencoded({extended: true}));
@@ -26,7 +25,6 @@ mongoose.connect(`mongodb+srv://${mongoDbUser}:${mongoDbPass}@cluster0.t6q8qhu.m
 const postSchema = {
   postName: String,
   postContent: String
-
 }
 
 const Post = new mongoose.model("Post", postSchema);
@@ -39,8 +37,6 @@ app.get("/", function(req, res){
       res.render("home", {homeStartingContent: homeStartingContent, posts: foundPosts });
     }
   });
-
-
 });
 
 app.get("/about", function(req, res){
@@ -56,20 +52,16 @@ app.get("/compose", function(req, res){
 });
 
 app.post("/compose", function(req, res) {
-
   const post = new Post({
     postName: req.body.postTitle,
     postContent: req.body.postContent
   });
   post.save();
-
   res.redirect("/compose");
-
 });
 
 app.get("/posts/:post", function(req, res){
 const requestedTitle = _.kebabCase(req.params.post);
-
 
  Post.findOne({postName: _.capitalize(requestedTitle.replace("-", " "))}, function(err, foundPost){
    if (err){
@@ -81,9 +73,11 @@ const requestedTitle = _.kebabCase(req.params.post);
  });
 });
 
+let port = process.env.PORT;
+if (port == null || port == "") {
+  port = 3000;
+}
 
-
-
-app.listen(3000, function() {
-  console.log("Server started on port 3000");
+app.listen(port, function() {
+  console.log("Server started succefully");
 });
